@@ -18,5 +18,9 @@ if (run('node', [T, path.join(tmp, 'clean.md')]).status !== 0) fail('clean polit
 fs.writeFileSync(path.join(tmp, 'num.md'), '버전 1.5 문서는 [여기](https://example.com/a.b)에서 받을 수 있습니다.\n');
 const n = JSON.parse(run('node', [T, path.join(tmp, 'num.md'), '--json']).stdout);
 if (n.sentences !== 1) fail('decimals/links should not split sentences');
+fs.writeFileSync(path.join(tmp, 'my.txt'), '자동화 루틴|내 금지 표현\n# comment\n');
+fs.writeFileSync(path.join(tmp, 'c.md'), '자동화 루틴을 만들었습니다.\n');
+const c = JSON.parse(run('node', [T, path.join(tmp, 'c.md'), '--cliches', path.join(tmp, 'my.txt'), '--json']).stdout);
+if (!c.issues.some((i) => i.why === '내 금지 표현')) fail('--cliches list not applied');
 fs.rmSync(tmp, { recursive: true, force: true });
-console.log('korean-tone-check ok: speech-level gate, clean text, decimals/links/parentheses');
+console.log('korean-tone-check ok: speech-level gate, clean text, decimals/links/parentheses, --cliches');

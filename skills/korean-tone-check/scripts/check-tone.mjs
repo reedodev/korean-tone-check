@@ -25,6 +25,8 @@ import fs from 'node:fs';
 const args = process.argv.slice(2);
 const opt = (k, d) => { const i = args.indexOf('--' + k); return i >= 0 ? args[i + 1] : d; };
 const file = args.find((a, i) => !a.startsWith('--') && !(i > 0 && args[i - 1].startsWith('--') && args[i - 1] !== '--json'));
+const minRun = Number(opt('min-run', 3)); // how many short sentences in a row count as choppy
+const shortLen = Number(opt('short', 14)); // a sentence shorter than this (no spaces) is 'short'
 const target = opt('target', 'hamnida');
 const asJson = args.includes('--json');
 if (!file) { console.error('usage: node check-tone.mjs <file|-> [--target hamnida|haeyo|plain] [--json]'); process.exit(2); }
@@ -69,6 +71,13 @@ const CLICHES = [
   [/(살펴보았습니다|알아보았습니다|정리해 보았습니다)/, '맺음 상투어'],
   [/(놀랍게도|흥미롭게도|주목할 만한 점은)/, '감탄형 연결'],
 ];
+// --cliches my-list.txt : one phrase per line, optional reason after |  (e.g. '게임 체인저|과장 수식어')
+if (opt('cliches')) {
+  for (const line of fs.readFileSync(opt('cliches'), 'utf8').split(/\r?\n/)) {
+    const [p, why] = line.split('|').map((s) => (s || '').trim());
+    if (p && !p.startsWith('#')) CLICHES.push([new RegExp(p.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')), why || '내 금지 표현']);
+  }
+}
 
 // ---------- split ----------
 const lines = text.split(/\r?\n/);
@@ -104,8 +113,8 @@ for (const { line, s } of sentences) {
 }
 // rhythm: 3+ consecutive short sentences (< 14 chars) / repeated openers
 let run = [];
-const flush = () => { if (run.length >= 3) issues.push({ type: 'rhythm', line: run[0].line, why: `짧은 문장 ${run.length}개 연속: 연결어미로 이유와 결과를 이어 보세요`, text: run.map(r => r.s).join(' ').slice(0, 70) }); run = []; };
-for (const x of sentences) { if (/[가-힣]/.test(x.s) && x.s.replace(/\s/g, '').length < 14) run.push(x); else flush(); }
+const flush = () => { if (run.length >= minRun) issues.push({ type: 'rhythm', line: run[0].line, why: `짧은 문장 ${run.length}개 연속: 연결어미로 이유와 결과를 이어 보세요`, text: run.map(r => r.s).join(' ').slice(0, 70) }); run = []; };
+for (const x of sentences) { if (/[가-힣]/.test(x.s) && x.s.replace(/\s/g, '').length < shortLen) run.push(x); else flush(); }
 flush();
 const opener = {};
 for (const { line, s } of sentences) { const w = s.split(/\s+/)[0]; if (w.length >= 2) (opener[w] ||= []).push(line); }
