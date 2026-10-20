@@ -55,6 +55,11 @@ node skills/korean-tone-check/scripts/check-tone.mjs skills/korean-tone-check/ex
 
 `node tests/run.mjs`가 SKILL.md 형식을 검사하고 예시 파일로 스크립트를 실제로 실행합니다. 푸시할 때마다 GitHub Actions가 같은 시험을 돌립니다(위 test 배지).
 
+<!-- credits -->
+## 출처와 영감
+
+- **참고한 프로젝트**: 한국어 AI 문체 분류는 [epoko77-ai/im-not-ai](https://github.com/epoko77-ai/im-not-ai)(MIT), 영어 AI 문체 패턴은 [blader/humanizer](https://github.com/blader/humanizer)를 작성자가 글쓰기 작업에 써 오면서 참고했습니다. 이 스킬은 두 프로젝트의 규칙 파일이나 코드를 옮기지 않았고, 상투어 목록과 종결어미 판정 규칙은 직접 만든 짧은 목록입니다. 깊은 윤문이 필요하면 원래 프로젝트를 쓰는 것을 권합니다.
+
 ## 만든 사람
 
 **리도**, AI 좌충우돌 실습 중인 20년차 엔지니어입니다. 매일 AI에게 일을 맡기다가 막힌 부분을 고쳐 가며 이 스킬을 만들었습니다.
@@ -67,5 +72,8 @@ node skills/korean-tone-check/scripts/check-tone.mjs skills/korean-tone-check/ex
 ## English
 
 Flags mixed Korean speech levels (formal/polite/plain), stock AI phrases, translationese and choppy sentence runs. Exits 1 on speech-level mismatches so an agent cannot publish a mixed draft.
+
+**Credits.**
+- Informed by [epoko77-ai/im-not-ai](https://github.com/epoko77-ai/im-not-ai) (Korean AI-tell taxonomy) and [blader/humanizer](https://github.com/blader/humanizer). No rule files or code were copied; the phrase list and ending rules are original and much smaller.
 
 Install: `/plugin marketplace add reedodev/korean-tone-check` then `/plugin install korean-tone-check@korean-tone-check`, or copy `skills/korean-tone-check` into `~/.claude/skills/`. See [SKILL.md](skills/korean-tone-check/SKILL.md) for the full procedure. MIT License; third-party models, fonts and libraries keep their own licenses.
