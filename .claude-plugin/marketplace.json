@@ -1,0 +1,21 @@
+{
+  "name": "korean-tone-check",
+  "owner": {
+    "name": "Reedo"
+  },
+  "metadata": {
+    "description": "Flags mixed Korean speech levels (formal/polite/plain), stock AI phrases, translationese and choppy sentence runs. Exits 1 on speech-level mismatches so an agent cannot publish a mixed draft.",
+    "version": "1.0.0"
+  },
+  "plugins": [
+    {
+      "name": "korean-tone-check",
+      "description": "Flags mixed Korean speech levels (formal/polite/plain), stock AI phrases, translationese and choppy sentence runs. Exits 1 on speech-level mismatches so an agent cannot publish a mixed draft.",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./skills/korean-tone-check"
+      ]
+    }
+  ]
+}
