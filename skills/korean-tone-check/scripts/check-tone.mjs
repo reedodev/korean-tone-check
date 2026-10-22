@@ -30,6 +30,8 @@ const shortLen = Number(opt('short', 14)); // a sentence shorter than this (no s
 const target = opt('target', 'hamnida');
 const asJson = args.includes('--json');
 if (!file) { console.error('usage: node check-tone.mjs <file|-> [--target hamnida|haeyo|plain] [--json]'); process.exit(2); }
+if (!['hamnida', 'haeyo', 'plain'].includes(target)) { console.error(`unknown --target "${target}": use hamnida, haeyo or plain`); process.exit(2); }
+if (file !== '-' && !fs.existsSync(file)) { console.error(`file not found: ${file}`); process.exit(2); }
 const text = fs.readFileSync(file === '-' ? 0 : file, 'utf8');
 
 // ---------- ending classification ----------
